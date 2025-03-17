@@ -1,4 +1,4 @@
-package com.Mefo.server.domain.medicine.entity;
+package Mefo.server.domain.medicine.entity;
 
 public enum MediPerOnce {
     ONE("1회 1정"),

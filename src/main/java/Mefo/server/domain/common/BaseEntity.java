@@ -1,4 +1,4 @@
-package com.Mefo.server.domain.common;
+package Mefo.server.domain.common;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

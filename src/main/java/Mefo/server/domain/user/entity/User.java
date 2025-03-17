@@ -1,9 +1,9 @@
-package com.Mefo.server.domain.user.entity;
+package Mefo.server.domain.user.entity;
 
 
-import com.Mefo.server.domain.common.BaseEntity;
-import com.Mefo.server.domain.medicine.entity.Medicine;
-import com.Mefo.server.domain.storage.entity.Storage;
+import Mefo.server.domain.common.BaseEntity;
+import Mefo.server.domain.medicine.entity.Medicine;
+import Mefo.server.domain.storage.entity.Storage;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;

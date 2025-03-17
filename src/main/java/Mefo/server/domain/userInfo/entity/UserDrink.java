@@ -1,4 +1,4 @@
-package com.Mefo.server.domain.userInfo.entity;
+package Mefo.server.domain.userInfo.entity;
 
 public enum UserDrink {
     RARELY("0~1회"),

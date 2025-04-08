@@ -6,18 +6,17 @@ import Mefo.server.domain.medicine.entity.Medicine;
 import Mefo.server.domain.storage.entity.Storage;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
+@Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class User extends BaseEntity {
 
     @Id
@@ -40,9 +39,21 @@ public class User extends BaseEntity {
     @NotNull
     private boolean marketing;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Storage> userStorage = new ArrayList<>();
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Medicine> userMedicine = new ArrayList<>();
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+//    private List<Storage> userStorage = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+//    private List<Medicine> userMedicine = new ArrayList<>();
+
+    public void setEmail(String email){this.email = email;}
+    public void setPassword(String password){this.password = password;}
+    public void setUserState(UserState userState){this.userState = userState;}
+    public void setMarketing(boolean agree){this.marketing = agree;}
+
+    public void setPushAlarm(boolean agree){this.pushAlarm = agree;}
+    public void setUserRole(UserRole userRole){this.userRole = userRole;}
 }

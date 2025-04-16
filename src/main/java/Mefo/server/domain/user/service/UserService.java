@@ -11,11 +11,11 @@ import Mefo.server.domain.user.dto.*;
 import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.repository.UserRepository;
 import Mefo.server.domain.userAllergyDrug.entity.UserAllergyDrug;
-import Mefo.server.domain.userAllergyDrug.repository.UserAllergyDrugRepository;
 import Mefo.server.domain.userAllergyEtc.entity.UserAllergyEtc;
 import Mefo.server.domain.userDisease.entity.UserDisease;
 import Mefo.server.domain.userInfo.entity.UserInfo;
 import Mefo.server.domain.userInfo.repository.UserInfoRepository;
+import Mefo.server.domain.userInfo.service.UserInfoService;
 import Mefo.server.global.error.ErrorCode;
 import Mefo.server.global.error.exception.BusinessException;
 import lombok.AllArgsConstructor;
@@ -48,14 +48,9 @@ public class UserService {
         User user = joinRequest.toUserEntity();
         UserInfo userInfo = joinRequest.toUserInfoEntity(user);
 
-        List<AllergyDrug> allergyDrugList = allergyDrugRepository.findAllById(joinRequest.getAllergyDrugs());
-        userInfo.getUserAllergyDrugList().addAll(createUserAllergyDrugList(userInfo, allergyDrugList));
-
-        List<AllergyEtc> allergyEtcList = allergyEtcRepository.findAllById(joinRequest.getAllergyEtcs());
-        userInfo.getUserAllergyEtcList().addAll(createUserAllergyEtcList(userInfo, allergyEtcList));
-
-        List<Disease> diseaseList = diseaseRepository.findAllById(joinRequest.getDiseases());
-        userInfo.getUserDiseaseList().addAll(createUserDiseaseList(userInfo, diseaseList));
+        userInfo.getUserAllergyDrugList().addAll(createUserAllergyDrugList(userInfo, joinRequest.getAllergyDrugs()));
+        userInfo.getUserAllergyEtcList().addAll(createUserAllergyEtcList(userInfo, joinRequest.getAllergyEtcs()));
+        userInfo.getUserDiseaseList().addAll(createUserDiseaseList(userInfo, joinRequest.getDiseases()));
 
         Storage storage = new Storage(user, "전체 보관함");
         user.getStorage().add(storage);
@@ -75,6 +70,26 @@ public class UserService {
         userRepository.save(user);
     }
 
+    //유저 설정 변경
+    @Transactional
+    public User patchUser(Long id, UserRequest userRequest){
+        User user = getUserById(id);
+        user.setPushAlarm(userRequest.isPushAlarm());
+        user.setMarketing(userRequest.isMarketing());
+        userRepository.save(user);
+        return user;
+    }
+
+    //회원 탈퇴하기
+    @Transactional
+    public void deleteUser(Long id){
+        UserInfo userInfo = userInfoRepository.findByUserId(id)
+                        .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
+        userInfoRepository.delete(userInfo);
+        User user = getUserById(id);
+        userRepository.delete(user);
+    }
+
 //    //로그인 하기
 //    public User login(LoginRequest loginRequest){
 //        User user = userRepository.findByEmail(loginRequest.getEmail())
@@ -90,27 +105,41 @@ public class UserService {
         return getUserByEmail(email);
     }
 
-    private List<UserAllergyDrug> createUserAllergyDrugList(UserInfo userInfo, List<AllergyDrug> allergyDrugs) {
-        return allergyDrugs.stream()
+    public List<UserAllergyDrug> createUserAllergyDrugList(UserInfo userInfo, List<Long> allergyDrug) {
+        List<AllergyDrug> allergyDrugs = allergyDrugRepository.findAllById(allergyDrug);
+        List<UserAllergyDrug> userAllergyDrugs = allergyDrugs.stream()
                 .map(drug -> new UserAllergyDrug(userInfo, drug))
                 .collect(Collectors.toList());
+        userAllergyDrugs.forEach(userInfo.getUserAllergyDrugList()::add);
+        return userAllergyDrugs;
     }
 
-    private List<UserAllergyEtc> createUserAllergyEtcList(UserInfo userInfo, List<AllergyEtc> allergyEtcs) {
-        return allergyEtcs.stream()
+    public List<UserAllergyEtc> createUserAllergyEtcList(UserInfo userInfo, List<Long> allergyEtc) {
+        List<AllergyEtc> allergyEtcs = allergyEtcRepository.findAllById(allergyEtc);
+        List<UserAllergyEtc> userAllergyEtcs = allergyEtcs.stream()
                 .map(etc -> new UserAllergyEtc(userInfo, etc))
                 .collect(Collectors.toList());
+        userAllergyEtcs.forEach(userInfo.getUserAllergyEtcList()::add);
+        return userAllergyEtcs;
     }
 
-    private List<UserDisease> createUserDiseaseList(UserInfo userInfo, List<Disease> diseases) {
-        return diseases.stream()
+    public List<UserDisease> createUserDiseaseList(UserInfo userInfo, List<Long> disease) {
+        List<Disease> diseases = diseaseRepository.findAllById(disease);
+        List<UserDisease> userDiseases = diseases.stream()
                 .map(d -> new UserDisease(userInfo, d))
                 .collect(Collectors.toList());
+        userDiseases.forEach(userInfo.getUserDiseaseList()::add);
+        return userDiseases;
     }
 
     //이메일로 유저 찾기
     public User getUserByEmail(String email){
         return userRepository.findByEmail(email)
+                .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
+    }
+    //id로 유저 찾기
+    public User getUserById(Long id){
+        return userRepository.findById(id)
                 .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
     }
 }

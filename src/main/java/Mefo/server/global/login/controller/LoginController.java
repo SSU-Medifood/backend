@@ -9,6 +9,7 @@ import Mefo.server.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,11 +28,12 @@ public class LoginController {
         return new ApiResponse<>(200, userService.checkEmailDuplicate(emailCheckRequest));
     }
 
+    @Transactional
     @PostMapping("/join")
     @Operation(summary = "회원가입")
     public ApiResponse<EmailResponse> join(@RequestBody JoinRequest joinRequest){
         User user = userService.join(joinRequest);
-        return new ApiResponse<>(200, EmailResponse.from(user));
+        return new ApiResponse<>(201, EmailResponse.from(user));
     }
 
     @PostMapping("/login")

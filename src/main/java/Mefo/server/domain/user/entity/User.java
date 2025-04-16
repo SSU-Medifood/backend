@@ -43,10 +43,10 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-//    private List<Storage> userStorage = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Storage> storage;
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Medicine> userMedicine = new ArrayList<>();
 
     public void setEmail(String email){this.email = email;}

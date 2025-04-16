@@ -1,27 +1,30 @@
 package Mefo.server.domain.userInfo.entity;
 
+import Mefo.server.domain.common.BaseEntity;
 import Mefo.server.domain.user.entity.User;
+import Mefo.server.domain.userAllergyDrug.entity.UserAllergyDrug;
+import Mefo.server.domain.userAllergyEtc.entity.UserAllergyEtc;
+import Mefo.server.domain.userDisease.entity.UserDisease;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserInfo {
+public class UserInfo extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", unique = true)
+    @JoinColumn(name = "userId", unique = true, nullable = false)
     private User user;
 
     @NotNull
@@ -38,7 +41,11 @@ public class UserInfo {
     private float height;
 
     @NotNull
-    private boolean smoke;
+    private float weight;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private UserSmoke userSmoke;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -47,9 +54,12 @@ public class UserInfo {
     @NotNull
     private boolean allergy;
 
-    private List<String> allergyMedi;
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAllergyDrug> userAllergyDrugList;
 
-    private List<String> allergyEtc;
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAllergyEtc> userAllergyEtcList;
 
-    private List<String> disease;
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserDisease> userDiseaseList;
 }

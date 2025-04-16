@@ -1,11 +1,15 @@
 package Mefo.server.global.login.filter;
 
+import Mefo.server.domain.user.entity.User;
+import Mefo.server.domain.user.repository.UserRepository;
+import Mefo.server.domain.user.service.UserService;
 import Mefo.server.global.error.ErrorCode;
 import Mefo.server.global.error.exception.BusinessException;
 import Mefo.server.global.login.dto.CustomUserDetails;
 import Mefo.server.global.login.dto.TokenResponse;
 import Mefo.server.global.login.util.JwtUtil;
 import Mefo.server.global.response.ApiResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +38,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> requestBody;
         try {
-            requestBody = objectMapper.readValue(request.getInputStream(), Map.class);
+            requestBody = objectMapper.readValue(request.getInputStream(), new TypeReference<Map<String, String>>() {
+            });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

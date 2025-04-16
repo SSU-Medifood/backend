@@ -25,4 +25,9 @@ public class Storage extends BaseEntity {
 
     @NotNull
     private String storageName;
+
+    public Storage(User user, String storageName){
+        this.user = user;
+        this.storageName = storageName;
+    }
 }

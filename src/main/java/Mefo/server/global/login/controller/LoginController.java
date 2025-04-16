@@ -30,15 +30,15 @@ public class LoginController {
     @PostMapping("/join")
     @Operation(summary = "회원가입")
     public ApiResponse<EmailResponse> join(@RequestBody JoinRequest joinRequest){
-        userService.join(joinRequest);
-        return new ApiResponse<>(200, EmailResponse.from(joinRequest.getEmail()));
+        User user = userService.join(joinRequest);
+        return new ApiResponse<>(200, EmailResponse.from(user));
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인하기")
-    public ApiResponse<TokenResponse> login(@RequestBody LoginRequest loginRequest){
-        User user = userService.login(loginRequest);
-        String token = jwtUtil.createJwt(user.getEmail(),"user",1000*60*60L);
-        return new ApiResponse<>(200, TokenResponse.from(user.getEmail(), token));
+    public void login(@RequestBody LoginRequest loginRequest){
+//        User user = userService.login(loginRequest);
+//        String token = jwtUtil.createJwt(user.getEmail(),"user",1000*60*60L);
+//        return new ApiResponse<>(200, TokenResponse.from(user.getEmail(), token));
     }
 }

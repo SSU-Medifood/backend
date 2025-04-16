@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
-                        .requestMatchers("/","/login","/login/**").permitAll()
+                        .requestMatchers("/","/login/","/login/**").permitAll()
                         .anyRequest().authenticated());
         http
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)

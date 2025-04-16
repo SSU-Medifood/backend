@@ -1,5 +1,6 @@
 package Mefo.server.global.login.dto;
 
+import Mefo.server.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 

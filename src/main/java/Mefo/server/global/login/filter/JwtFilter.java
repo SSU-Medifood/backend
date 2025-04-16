@@ -33,11 +33,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 || path.startsWith("/v3/api-docs")
                 || path.startsWith("/swagger")
                 || path.startsWith("/api-docs")
-                ||path.startsWith("/login")) {
+                || path.startsWith("/login/")) {
             filterChain.doFilter(request, response);
             return;
         }
-
 
 
         // request에서 Authorization 헤더 찾음
@@ -86,7 +85,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 세션에 사용자 등록 => 일시적으로 user 세션 생성
         SecurityContextHolder.getContext().setAuthentication(authToken);
-
         // 다음 필터로 request, response 넘겨줌
         filterChain.doFilter(request, response);
     }

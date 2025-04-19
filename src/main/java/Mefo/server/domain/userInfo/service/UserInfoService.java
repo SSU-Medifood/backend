@@ -1,5 +1,6 @@
 package Mefo.server.domain.userInfo.service;
 
+import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.service.UserService;
 import Mefo.server.domain.userAllergyDrug.repository.UserAllergyDrugRepository;
 import Mefo.server.domain.userAllergyEtc.repository.UserAllergyEtcRepository;
@@ -26,10 +27,16 @@ public class UserInfoService {
         return userInfoRepository.findByUserId(id)
                 .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
     }
+    //authentication으로 userinfo 찾기
+    public UserInfo findByLoginUser(String email){
+        User user = userService.getLoginUser(email);
+        return userInfoRepository.findByUserId(user.getId())
+                .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
+    }
 
     //유저 건강 정보 수정하기
-    public UserInfo patchUserInfo(Long userId, UserInfoPatchRequest userInfoPatchRequest){
-        UserInfo userInfo = findByUserId(userId);
+    public UserInfo patchUserInfo(String email, UserInfoPatchRequest userInfoPatchRequest){
+        UserInfo userInfo = findByLoginUser(email);
         userInfo.setUserSex(userInfoPatchRequest.getUserSex());
         userInfo.setHeight(userInfoPatchRequest.getHeight());
         userInfo.setWeight(userInfoPatchRequest.getWeight());

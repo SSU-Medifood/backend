@@ -22,8 +22,8 @@ public class UserController {
     @GetMapping("/user/loginCheck")
     @Operation(summary = "현재 로그인한 이메일 확인")
     public ApiResponse<EmailResponse> getLoginUser(Authentication authentication){
-        User loginUser = userService.getLoginUser(authentication.getName());
-        return new ApiResponse<>(200, EmailResponse.from(loginUser));
+        User user = userService.getLoginUser(authentication.getName());
+        return new ApiResponse<>(200, EmailResponse.from(user));
     }
 
     //비밀번호 변경
@@ -36,28 +36,28 @@ public class UserController {
     }
 
     //사용자 설정 불러오기
-    @GetMapping("/user/{userId}/get")
+    @GetMapping("/user/get")
     @Operation(summary = "사용자 설정 불러오기")
-    public ApiResponse<UserResponse> getUser(@PathVariable Long userId){
-        User user = userService.getUserById(userId);
+    public ApiResponse<UserResponse> getUser(Authentication authentication){
+        User user = userService.getLoginUser(authentication.getName());
         return new ApiResponse<>(200, UserResponse.from(user));
     }
 
     //사용자 설정 수정하기
     @Transactional
-    @PatchMapping("/user/{userId}/patch")
+    @PatchMapping("/user/patch")
     @Operation(summary = "사용자 설정 수정하기")
-    public ApiResponse<UserResponse> patchUser(@PathVariable Long userId, @RequestBody UserRequest userRequest){
-        User user = userService.patchUser(userId, userRequest);
+    public ApiResponse<UserResponse> patchUser(Authentication authentication, @RequestBody UserRequest userRequest){
+        User user = userService.patchUser(authentication.getName(), userRequest);
         return new ApiResponse<>(200, UserResponse.from(user));
     }
 
     //회원탈퇴
     @Transactional
-    @DeleteMapping("/user/{userId}/delete")
+    @DeleteMapping("/user/delete")
     @Operation(summary = "회원 탈퇴하기")
-    public ApiResponse<String> deleteId(@PathVariable Long userId){
-        userService.deleteUser(userId);
+    public ApiResponse<String> deleteId(Authentication authentication){
+        userService.deleteUser(authentication.getName());
         return new ApiResponse<>(204, "success");
     }
 }

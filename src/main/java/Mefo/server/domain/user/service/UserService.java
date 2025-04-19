@@ -19,6 +19,7 @@ import Mefo.server.domain.userInfo.service.UserInfoService;
 import Mefo.server.global.error.ErrorCode;
 import Mefo.server.global.error.exception.BusinessException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,8 +73,8 @@ public class UserService {
 
     //유저 설정 변경
     @Transactional
-    public User patchUser(Long id, UserRequest userRequest){
-        User user = getUserById(id);
+    public User patchUser(String email, UserRequest userRequest){
+        User user = getLoginUser(email);
         user.setPushAlarm(userRequest.isPushAlarm());
         user.setMarketing(userRequest.isMarketing());
         userRepository.save(user);
@@ -82,11 +83,11 @@ public class UserService {
 
     //회원 탈퇴하기
     @Transactional
-    public void deleteUser(Long id){
-        UserInfo userInfo = userInfoRepository.findByUserId(id)
+    public void deleteUser(String email){
+        User user = getLoginUser(email);
+        UserInfo userInfo = userInfoRepository.findByUserId(user.getId())
                         .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
         userInfoRepository.delete(userInfo);
-        User user = getUserById(id);
         userRepository.delete(user);
     }
 

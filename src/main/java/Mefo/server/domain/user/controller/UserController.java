@@ -30,9 +30,9 @@ public class UserController {
     @Transactional
     @PatchMapping("/login/password")
     @Operation(summary = "비밀번호 변경하기")
-    public ApiResponse<String> changePassword(@RequestBody PasswordRequest passwordRequest){
-        userService.changePassword(passwordRequest);
-        return new ApiResponse<>(200, "success");
+    public ApiResponse<String> patchPassword(@RequestBody PasswordRequest passwordRequest){
+        userService.patchPassword(passwordRequest);
+        return new ApiResponse<>(200, null);
     }
 
     //사용자 설정 불러오기
@@ -56,8 +56,8 @@ public class UserController {
     @Transactional
     @DeleteMapping("/user/delete")
     @Operation(summary = "회원 탈퇴하기")
-    public ApiResponse<String> deleteId(Authentication authentication){
+    public ApiResponse<String> deleteUser(Authentication authentication){
         userService.deleteUser(authentication.getName());
-        return new ApiResponse<>(204, "success");
+        return new ApiResponse<>(204,null);
     }
 }

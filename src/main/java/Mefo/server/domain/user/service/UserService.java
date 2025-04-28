@@ -15,11 +15,9 @@ import Mefo.server.domain.userAllergyEtc.entity.UserAllergyEtc;
 import Mefo.server.domain.userDisease.entity.UserDisease;
 import Mefo.server.domain.userInfo.entity.UserInfo;
 import Mefo.server.domain.userInfo.repository.UserInfoRepository;
-import Mefo.server.domain.userInfo.service.UserInfoService;
 import Mefo.server.global.error.ErrorCode;
 import Mefo.server.global.error.exception.BusinessException;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +63,7 @@ public class UserService {
 
     //비밀번호 변경
     @Transactional
-    public void changePassword(PasswordRequest passwordRequest){
+    public void patchPassword(PasswordRequest passwordRequest){
         User user = getUserByEmail(passwordRequest.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(passwordRequest.getPassword()));
         userRepository.save(user);

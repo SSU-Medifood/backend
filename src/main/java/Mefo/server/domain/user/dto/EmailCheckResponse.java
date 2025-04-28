@@ -6,18 +6,18 @@ import lombok.Getter;
 @Getter
 @Builder
 public class EmailCheckResponse {
-    private String message;
+    private boolean available;
 
     public static EmailCheckResponse from(boolean check){
-        String message;
+        boolean available;
         if(check){
-            message="이미 가입한 이메일입니다.";
+            available = false;
         }
         else{
-            message="사용 가능한 이메일입니다.";
+            available= true;
         }
         return EmailCheckResponse.builder()
-                .message(message)
+                .available(available)
                 .build();
     }
 }

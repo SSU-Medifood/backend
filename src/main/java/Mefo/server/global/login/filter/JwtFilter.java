@@ -75,9 +75,6 @@ public class JwtFilter extends OncePerRequestFilter {
         user.setPassword("임시 비밀번호");
         user.setUserRole(UserRole.USER);
 
-//        JoinRequest joinRequest = null;
-//        joinRequest.setPassword("임시 비밀번호");
-//        joinRequest.setEmail(email);
         // UserDetails에 회원 정보 객체 담기
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
 

@@ -25,8 +25,7 @@ public class UserInfoController {
     @Operation(summary = "유저 건강 정보 확인하기")
     public ApiResponse<UserInfoResponse> getUserInfo(Authentication authentication){
         UserInfo userInfo = userInfoService.findByLoginUser(authentication.getName());
-        UserInfoResponse userInfoResponse = UserInfoResponse.from(userInfo);
-        return new ApiResponse<>(200, userInfoResponse);
+        return new ApiResponse<>(200, UserInfoResponse.from(userInfo));
     }
 
     //유저 건강 정보 수정하기

@@ -19,7 +19,7 @@ public enum UserDrink {
 //    UserDrink(String times){
 //        this.times = times;
 //    }
-    public String getTimes(){
+    public String getDrinkTimes(){
         return times;
     }
     @JsonCreator

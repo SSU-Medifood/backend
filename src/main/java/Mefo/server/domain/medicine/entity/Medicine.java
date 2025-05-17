@@ -1,6 +1,8 @@
 package Mefo.server.domain.medicine.entity;
 
+import Mefo.server.domain.alarm.entity.Alarm;
 import Mefo.server.domain.common.BaseEntity;
+import Mefo.server.domain.medicine.dto.MedicineRequest;
 import Mefo.server.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -45,6 +48,24 @@ public class Medicine extends BaseEntity {
 
     @NotNull
     private boolean alarm;
+    @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alarm> alarmTime = new ArrayList<>();
 
-    private List<LocalTime> alarmTime;
+    public Medicine(User user, MedicineRequest medicineRequest){
+        this.user = user;
+        this.mediName = medicineRequest.getMediName();
+        this.mediNickName = medicineRequest.getMediNickName();
+        this.mediPerOnce = medicineRequest.getMediPerOnce();
+        this.mediDoseTime = medicineRequest.getMediDoseTime();
+        this.alarm = medicineRequest.isAlarm();
+        this.perDay = medicineRequest.getPerDay();
+    }
+    public void patchMedicine(MedicineRequest medicineRequest){
+        this.mediName = medicineRequest.getMediName();
+        this.mediNickName = medicineRequest.getMediNickName();
+        this.mediPerOnce = medicineRequest.getMediPerOnce();
+        this.mediDoseTime = medicineRequest.getMediDoseTime();
+        this.alarm = medicineRequest.isAlarm();
+        this.perDay = medicineRequest.getPerDay();
+    }
 }

@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,13 +47,13 @@ public class UserService {
         joinRequest.setPassword(bCryptPasswordEncoder.encode(joinRequest.getPassword()));
         User user = joinRequest.toUserEntity();
         UserInfo userInfo = joinRequest.toUserInfoEntity(user);
-
-        userInfo.getUserAllergyDrugList().addAll(createUserAllergyDrugList(userInfo, joinRequest.getAllergyDrugs()));
-        userInfo.getUserAllergyEtcList().addAll(createUserAllergyEtcList(userInfo, joinRequest.getAllergyEtcs()));
-        userInfo.getUserDiseaseList().addAll(createUserDiseaseList(userInfo, joinRequest.getDiseases()));
-
+        if(joinRequest.isAllergy()){
+            userInfo.getUserAllergyDrugList().addAll(createUserAllergyDrugList(userInfo, joinRequest.getAllergyDrugs()));
+            userInfo.getUserAllergyEtcList().addAll(createUserAllergyEtcList(userInfo, joinRequest.getAllergyEtcs()));
+            userInfo.getUserDiseaseList().addAll(createUserDiseaseList(userInfo, joinRequest.getDiseases()));
+        }
         Storage storage = new Storage(user, "전체 보관함");
-        user.getStorage().add(storage);
+        user.getStorages().add(storage);
 
         userRepository.save(user);
         userInfoRepository.save(userInfo);
@@ -106,28 +107,34 @@ public class UserService {
 
     public List<UserAllergyDrug> createUserAllergyDrugList(UserInfo userInfo, List<Long> allergyDrug) {
         List<AllergyDrug> allergyDrugs = allergyDrugRepository.findAllById(allergyDrug);
-        List<UserAllergyDrug> userAllergyDrugs = allergyDrugs.stream()
-                .map(drug -> new UserAllergyDrug(userInfo, drug))
-                .collect(Collectors.toList());
-        userAllergyDrugs.forEach(userInfo.getUserAllergyDrugList()::add);
+        List<UserAllergyDrug> userAllergyDrugs = new ArrayList<>();
+        for (AllergyDrug drug : allergyDrugs) {
+            UserAllergyDrug userAllergyDrug = new UserAllergyDrug(userInfo, drug);
+            userAllergyDrugs.add(userAllergyDrug);
+        }
+        userInfo.getUserAllergyDrugList().addAll(userAllergyDrugs);
         return userAllergyDrugs;
     }
 
     public List<UserAllergyEtc> createUserAllergyEtcList(UserInfo userInfo, List<Long> allergyEtc) {
         List<AllergyEtc> allergyEtcs = allergyEtcRepository.findAllById(allergyEtc);
-        List<UserAllergyEtc> userAllergyEtcs = allergyEtcs.stream()
-                .map(etc -> new UserAllergyEtc(userInfo, etc))
-                .collect(Collectors.toList());
-        userAllergyEtcs.forEach(userInfo.getUserAllergyEtcList()::add);
+        List<UserAllergyEtc> userAllergyEtcs = new ArrayList<>();
+        for (AllergyEtc etc : allergyEtcs) {
+            UserAllergyEtc userAllergyEtc = new UserAllergyEtc(userInfo, etc);
+            userAllergyEtcs.add(userAllergyEtc);
+        }
+        userInfo.getUserAllergyEtcList().addAll(userAllergyEtcs);
         return userAllergyEtcs;
     }
 
     public List<UserDisease> createUserDiseaseList(UserInfo userInfo, List<Long> disease) {
         List<Disease> diseases = diseaseRepository.findAllById(disease);
-        List<UserDisease> userDiseases = diseases.stream()
-                .map(d -> new UserDisease(userInfo, d))
-                .collect(Collectors.toList());
-        userDiseases.forEach(userInfo.getUserDiseaseList()::add);
+        List<UserDisease> userDiseases = new ArrayList<>();
+        for (Disease d : diseases) {
+            UserDisease userDisease = new UserDisease(userInfo, d);
+            userDiseases.add(userDisease);
+        }
+        userInfo.getUserDiseaseList().addAll(userDiseases);
         return userDiseases;
     }
 

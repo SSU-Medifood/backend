@@ -42,7 +42,7 @@ public class UserInfoResponse {
                 .height(userInfo.getHeight())
                 .weight(userInfo.getWeight())
                 .userSmoke(userInfo.getUserSmoke().getSmoke())
-                .userDrink(userInfo.getUserDrink().getTimes())
+                .userDrink(userInfo.getUserDrink().getDrinkTimes())
                 .allergy(userInfo.isAllergy())
                 .allergyDrugList(AllergyDrugResponse.from(userInfo.getUserAllergyDrugList().stream()
                         .map(UserAllergyDrug::getAllergyDrug)

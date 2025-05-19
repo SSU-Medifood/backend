@@ -1,5 +1,6 @@
 package Mefo.server.domain.allergyEtc.entity;
 
+import Mefo.server.domain.common.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @Entity
-public class AllergyEtc {
+public class AllergyEtc extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

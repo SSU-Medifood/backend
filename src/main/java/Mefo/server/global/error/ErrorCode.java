@@ -18,8 +18,13 @@ public enum ErrorCode {
 
     TOKEN_EXPIRED(401, "만료된 토큰입니다."),
 
+    //MEDICINE
+    MEDICINE_DOESNT_EXIST(404, "존재하지 않는 복용약입니다."),
+
     //NOT_VALID
     NOT_VALID_ERROR(400, "잘못된 파라미터입니다."),
+
+    NOT_VALID_ACCESS(400, "올바르지 않은 접근입니다."),
 
     INVALID_ENUM_VALUE(400, "올바르지 않은 값을 입력했습니다.");
     private final int status;

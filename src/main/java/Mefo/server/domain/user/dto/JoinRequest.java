@@ -7,10 +7,8 @@ import Mefo.server.domain.userInfo.entity.UserDrink;
 import Mefo.server.domain.userInfo.entity.UserInfo;
 import Mefo.server.domain.userInfo.entity.UserSex;
 import Mefo.server.domain.userInfo.entity.UserSmoke;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +39,7 @@ public class JoinRequest {
                 .userRole(UserRole.USER)
                 .pushAlarm(true)
                 .marketing(marketing)
-                .storage(new ArrayList<>())
+                .storages(new ArrayList<>())
                 .userState(UserState.ACTIVE)
                 .build();
     }

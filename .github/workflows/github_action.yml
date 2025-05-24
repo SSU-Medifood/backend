@@ -75,6 +75,7 @@ jobs:
         key: ${{ secrets.EC2_PRIVATE_KEY }} # pem 키
         # 도커 작업
         script: |
+          echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/mefo:latest
           CONTAINER_NAME="mefo-backend"
           if [ $(sudo docker ps -a -q -f name=$CONTAINER_NAME) ]; then

@@ -1,0 +1,85 @@
+name: Mefo CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    types: [closed]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: create resources directory
+      run: mkdir -p ./src/main/resources
+      shell: bash
+
+    - name: make application.yml
+      if: contains(github.ref, 'main')
+      run: |
+        cd ./src/main/resources
+        touch ./application.yml
+        echo "${{ secrets.APPLICATION }}" >> ./application.yml
+      shell: bash
+
+    - name: make application-prod.yml
+      if: contains(github.ref, 'main')
+      run: |
+        cd ./src/main/resources
+        touch ./application-prod.yml
+        echo "${{ secrets.APPLICATION_PROD }}" >> ./application-prod.yml
+      shell: bash
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle Wrapper
+      run: ./gradlew build
+
+    # Docker Setup Buildx
+    - name: Docker Setup Buildx
+      uses: docker/setup-buildx-action@v3.5.0
+    
+    # DockerHub Login
+    - name: docker login
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: Build and push Docker image
+      run: |
+        docker buildx build --no-cache --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKERHUB_USERNAME }}/mefo:latest --push .
+  
+     # EC2 배포
+    - name: Docker image pull & Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }} # EC2 인스턴스 퍼블릭 DNS
+        username: ubuntu
+        key: ${{ secrets.EC2_PRIVATE_KEY }} # pem 키
+        # 도커 작업
+        script: |
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/mefo:latest
+          CONTAINER_NAME="mefo-backend"
+          if [ $(sudo docker ps -a -q -f name=$CONTAINER_NAME) ]; then
+          sudo docker stop $CONTAINER_NAME
+          sudo docker rm $CONTAINER_NAME
+          fi
+          sudo docker run -d --log-driver=syslog -p 8080:8080 --name $CONTAINER_NAME ${{ secrets.DOCKERHUB_USERNAME }}/mefo:latest
+          sudo docker image prune -a -f

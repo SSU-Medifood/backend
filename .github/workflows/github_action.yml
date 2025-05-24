@@ -76,11 +76,11 @@ jobs:
         # 도커 작업
         script: |
           echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/mefo:latest
+          sudo docker pull "${{ secrets.DOCKERHUB_USERNAME }}"/mefo:latest
           CONTAINER_NAME="mefo"
           if [ $(sudo docker ps -a -q -f name=$CONTAINER_NAME) ]; then
           sudo docker stop $CONTAINER_NAME
           sudo docker rm $CONTAINER_NAME
           fi
-          sudo docker run -d --log-driver=syslog -p 8080:8080 --name $CONTAINER_NAME ${{ secrets.DOCKERHUB_USERNAME }}/mefo:latest
+          sudo docker run -d --log-driver=syslog -p 8080:8080 --name $CONTAINER_NAME "${{ secrets.DOCKERHUB_USERNAME }}"/mefo:latest
           sudo docker image prune -a -f

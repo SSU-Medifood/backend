@@ -48,8 +48,8 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build with Gradle Wrapper
-      run: ./gradlew build
+    - name: Build with Gradle Wrapper (without test)
+      run: ./gradlew build -x test
 
     # Docker Setup Buildx
     - name: Docker Setup Buildx

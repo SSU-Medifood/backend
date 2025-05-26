@@ -9,6 +9,8 @@ gradlew.bat
 ### YML ###
 src/main/resources/*.yml
 
+### SSL ###
+nginx/ssl/
 ### STS ###
 .apt_generated
 .classpath

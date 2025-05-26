@@ -10,11 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry
                 .addMapping("/**")
-<<<<<<< HEAD
-                .allowedOrigins("http://localhost:5173","https://mefoweb.com")
-=======
-                .allowedOrigins("http://localhost:5173" ,"https://mefoweb.com")
->>>>>>> 54b6040 (Fix: EC2에서 수정한 설정 파일 업데이트)
+                .allowedOrigins("http://localhost:5173","https://api.mefoweb.com")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(false);

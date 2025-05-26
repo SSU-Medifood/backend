@@ -26,9 +26,10 @@ public class SwaggerConfig {
     }
 
     private List<Server> getServers() {
-        return List.of(new Server()
-                .url("/api")
-                .description("Mefo server API"));
+        return List.of(
+                new Server().url("https://api.mefoweb.com").description("배포 서버"),
+                new Server().url("http://localhost:8080").description("로컬 서버")
+        );
     }
     private Info getInfo() {
         return new Info()

@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: mefo-backend
+    image: ssumefo/mefo:latest
+    expose:
+      - "8080"
+    networks:
+      - mefo
+
+  nginx:
+    image: nginx:latest
+    container_name: mefo-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - backend
+    networks:
+      - mefo
+    restart: always
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - ./nginx/ssl:/etc/letsencrypt
+    entrypoint: >
+      /bin/sh -c "trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew --quiet; done"
+    networks:
+      - mefo
+
+networks:
+  mefo:

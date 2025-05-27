@@ -1,18 +1,12 @@
 package Mefo.server.domain.userInfo.dto;
 
 import Mefo.server.domain.allergyDrug.dto.AllergyDrugResponse;
-import Mefo.server.domain.allergyDrug.entity.AllergyDrug;
 import Mefo.server.domain.allergyEtc.dto.AllergyEtcResponse;
-import Mefo.server.domain.allergyEtc.entity.AllergyEtc;
 import Mefo.server.domain.disease.dto.DiseaseResponse;
-import Mefo.server.domain.disease.entity.Disease;
 import Mefo.server.domain.userAllergyDrug.entity.UserAllergyDrug;
 import Mefo.server.domain.userAllergyEtc.entity.UserAllergyEtc;
 import Mefo.server.domain.userDisease.entity.UserDisease;
-import Mefo.server.domain.userInfo.entity.UserDrink;
 import Mefo.server.domain.userInfo.entity.UserInfo;
-import Mefo.server.domain.userInfo.entity.UserSex;
-import Mefo.server.domain.userInfo.entity.UserSmoke;
 import lombok.Builder;
 import lombok.Getter;
 

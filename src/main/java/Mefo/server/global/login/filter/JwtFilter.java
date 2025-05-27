@@ -1,9 +1,7 @@
 package Mefo.server.global.login.filter;
 
-import Mefo.server.domain.user.dto.JoinRequest;
 import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.entity.UserRole;
-import Mefo.server.domain.user.entity.UserState;
 import Mefo.server.global.error.ErrorCode;
 import Mefo.server.global.error.exception.BusinessException;
 import Mefo.server.global.login.dto.CustomUserDetails;
@@ -49,7 +47,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
             System.out.println("token null");
             // 토큰이 유효하지 않으므로 request와 response를 다음 필터로 넘겨줌
-            //filterChain.doFilter(request, response);
             throw new BusinessException(ErrorCode.TOKEN_NOT_PROVIDED);
         }
         // Authorization에서 Bearer 접두사 제거
@@ -58,8 +55,6 @@ public class JwtFilter extends OncePerRequestFilter {
         // token 소멸 시간 검증
         // 유효기간이 만료한 경우
         if(jwtUtil.isExpired(token)){
-            //System.out.println("token expired");
-            //filterChain.doFilter(request, response);
             throw new BusinessException(ErrorCode.TOKEN_EXPIRED);
         }
 

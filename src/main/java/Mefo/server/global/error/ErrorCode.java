@@ -21,6 +21,18 @@ public enum ErrorCode {
     //MEDICINE
     MEDICINE_DOESNT_EXIST(404, "존재하지 않는 복용약입니다."),
 
+    //STORAGE
+    STORAGE_DOESNT_EXIST(404, "존재하지 않는 보관함입니다."),
+
+    //RECIPE_IMAGE
+    IMAGE_DOESNT_EXIST(404, "존재하지 않는 레시피 이미지입니다."),
+
+    //RECIPE
+    RECIPE_DOESNT_EXIST(404, "존재하지 않는 레시피입니다."),
+
+    //USER_RECIPE
+    USER_RECIPE_DOESNT_EXIST(404, "존재하지 않는 찜입니다."),
+
     //NOT_VALID
     NOT_VALID_ERROR(400, "잘못된 파라미터입니다."),
 

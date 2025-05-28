@@ -6,7 +6,6 @@ import Mefo.server.domain.allergyEtc.entity.AllergyEtc;
 import Mefo.server.domain.allergyEtc.repository.AllergyEtcRepository;
 import Mefo.server.domain.disease.entity.Disease;
 import Mefo.server.domain.disease.repository.DiseaseRepository;
-import Mefo.server.domain.storage.entity.Storage;
 import Mefo.server.domain.user.dto.*;
 import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.repository.UserRepository;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -52,8 +50,8 @@ public class UserService {
             userInfo.getUserAllergyEtcList().addAll(createUserAllergyEtcList(userInfo, joinRequest.getAllergyEtcs()));
             userInfo.getUserDiseaseList().addAll(createUserDiseaseList(userInfo, joinRequest.getDiseases()));
         }
-        Storage storage = new Storage(user, "전체 보관함");
-        user.getStorages().add(storage);
+//        Storage storage = new Storage(user, "전체 보관함");
+//        user.getStorages().add(storage);
 
         userRepository.save(user);
         userInfoRepository.save(userInfo);
@@ -89,16 +87,6 @@ public class UserService {
         userInfoRepository.delete(userInfo);
         userRepository.delete(user);
     }
-
-//    //로그인 하기
-//    public User login(LoginRequest loginRequest){
-//        User user = userRepository.findByEmail(loginRequest.getEmail())
-//                .orElseThrow(() -> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
-////        if(!user.getPassword().equals(loginRequest.getEmail())) {
-////            throw new BusinessException(ErrorCode.EMAIL_PASSWORD_DOESNT_MATCH);
-////        }
-//        return user;
-//    }
 
     //현재 로그인 한 계정(이메일)
     public User getLoginUser(String email){

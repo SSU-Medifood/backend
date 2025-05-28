@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -37,7 +36,8 @@ public class MedicineService {
     //약 정보 수정하기
     @Transactional
     public Medicine patchMedicine(User user, Long mediId, MedicineRequest medicineRequest){
-        Medicine medicine = checkMedicineUser(user, mediId);
+        Medicine medicine = medicineRepository.findByIdAndUserId(mediId, user.getId())
+                .orElseThrow(()-> new BusinessException(ErrorCode.MEDICINE_DOESNT_EXIST));
         if(medicine.isAlarm()){
             medicine.getAlarmTime().clear();
             alarmRepository.deleteByMedicine(medicine);
@@ -53,20 +53,12 @@ public class MedicineService {
     //복용약 삭제하기
     @Transactional
     public void deleteMedicine(User user, Long mediId){
-        Medicine medicine = checkMedicineUser(user, mediId);
+        Medicine medicine = medicineRepository.findByIdAndUserId(mediId, user.getId())
+                .orElseThrow(()-> new BusinessException(ErrorCode.MEDICINE_DOESNT_EXIST));
+        user.getMedicines().remove(medicine);
         medicineRepository.delete(medicine);
     }
 
-
-    //medi_Id가 요청한 사용자의 것이 맞는지 확인 후 Medicine 반환
-    public Medicine checkMedicineUser(User user, Long mediId){
-        Medicine medicine = medicineRepository.findById(mediId)
-                .orElseThrow(()-> new BusinessException(ErrorCode.MEDICINE_DOESNT_EXIST));
-        if(!medicine.getUser().getId().equals(user.getId())){
-            throw new BusinessException(ErrorCode.NOT_VALID_ACCESS);
-        }
-        return medicine;
-    }
 
     //LocalTime List 받아서 alarm 객체 만들기
     public void createAlarm(Medicine medicine, User user, List<LocalTime> times){

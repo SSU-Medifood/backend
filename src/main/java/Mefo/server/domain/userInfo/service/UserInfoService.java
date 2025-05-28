@@ -9,7 +9,6 @@ import Mefo.server.domain.userAllergyEtc.repository.UserAllergyEtcRepository;
 import Mefo.server.domain.userDisease.entity.UserDisease;
 import Mefo.server.domain.userDisease.repository.UserDiseaseRepository;
 import Mefo.server.domain.userInfo.dto.UserInfoPatchRequest;
-import Mefo.server.domain.userInfo.dto.UserInfoRequest;
 import Mefo.server.domain.userInfo.entity.UserInfo;
 import Mefo.server.domain.userInfo.repository.UserInfoRepository;
 import Mefo.server.global.error.ErrorCode;
@@ -27,11 +26,7 @@ public class UserInfoService {
     private final UserAllergyEtcRepository userAllergyEtcRepository;
     private final UserDiseaseRepository userDiseaseRepository;
     private final UserService userService;
-    //userId로 userInfo 찾기
-//    public UserInfo findByUserId(Long id){
-//        return userInfoRepository.findByUserId(id)
-//                .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
-//    }
+
     //authentication으로 userinfo 찾기
     public UserInfo findByLoginUser(String email){
         User user = userService.getLoginUser(email);

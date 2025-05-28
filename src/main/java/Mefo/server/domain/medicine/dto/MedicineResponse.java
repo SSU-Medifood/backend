@@ -1,21 +1,12 @@
 package Mefo.server.domain.medicine.dto;
 
 import Mefo.server.domain.alarm.dto.AlarmResponse;
-import Mefo.server.domain.alarm.entity.Alarm;
-import Mefo.server.domain.allergyDrug.dto.AllergyDrugResponse;
-import Mefo.server.domain.allergyDrug.entity.AllergyDrug;
-import Mefo.server.domain.medicine.entity.MediDoseTime;
-import Mefo.server.domain.medicine.entity.MediPerOnce;
 import Mefo.server.domain.medicine.entity.Medicine;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder

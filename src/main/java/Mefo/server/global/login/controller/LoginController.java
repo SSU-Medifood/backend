@@ -3,7 +3,6 @@ package Mefo.server.global.login.controller;
 import Mefo.server.domain.user.dto.*;
 import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.service.UserService;
-import Mefo.server.global.login.dto.TokenResponse;
 import Mefo.server.global.login.util.JwtUtil;
 import Mefo.server.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

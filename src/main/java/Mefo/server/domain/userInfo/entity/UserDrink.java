@@ -16,9 +16,6 @@ public enum UserDrink {
 
     private final String times;
 
-//    UserDrink(String times){
-//        this.times = times;
-//    }
     public String getDrinkTimes(){
         return times;
     }

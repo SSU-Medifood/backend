@@ -1,10 +1,8 @@
 package Mefo.server.domain.userInfo.controller;
 
 import Mefo.server.domain.userInfo.dto.UserInfoPatchRequest;
-import Mefo.server.domain.userInfo.dto.UserInfoRequest;
 import Mefo.server.domain.userInfo.dto.UserInfoResponse;
 import Mefo.server.domain.userInfo.entity.UserInfo;
-import Mefo.server.domain.userInfo.repository.UserInfoRepository;
 import Mefo.server.domain.userInfo.service.UserInfoService;
 import Mefo.server.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

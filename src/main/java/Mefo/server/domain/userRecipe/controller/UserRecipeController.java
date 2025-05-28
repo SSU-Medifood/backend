@@ -24,7 +24,7 @@ public class UserRecipeController {
     //전체 보관함에 레시피 찜하기
     @Transactional
     @PostMapping("/like/{recipeId}")
-    @Operation(summary = "레시피 찜하기")
+    @Operation(summary = "전체 보관함에 레시피 찜하기")
     public ApiResponse<UserRecipeResponse> createUserRecipe(Authentication authentication, @PathVariable Long recipeId){
         User user = userService.getLoginUser(authentication.getName());
         UserRecipe userRecipe = userRecipeService.createUserRecipe(user, recipeId);
@@ -34,10 +34,10 @@ public class UserRecipeController {
     //특정 보관함에 레시피 찜하기
     @Transactional
     @PatchMapping("/like/{recipeId}/{storageId}")
-    @Operation(summary = "레시피 찜하기")
-    public ApiResponse<UserRecipeResponse> createUserRecipe(Authentication authentication, @PathVariable Long recipeId, @PathVariable Long storageId){
+    @Operation(summary = "특정 보관함에 레시피 찜하기")
+    public ApiResponse<UserRecipeResponse> patchUserRecipe(Authentication authentication, @PathVariable Long recipeId, @PathVariable Long storageId){
         User user = userService.getLoginUser(authentication.getName());
-        UserRecipe userRecipe = userRecipeService.createUserRecipe(user, storageId, recipeId);
+        UserRecipe userRecipe = userRecipeService.patchUserRecipe(user, storageId, recipeId);
         return new ApiResponse<>(200, UserRecipeResponse.from(userRecipe));
     }
 

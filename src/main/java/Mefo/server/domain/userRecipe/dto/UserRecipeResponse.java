@@ -12,10 +12,17 @@ public class UserRecipeResponse {
     private Long recipeId;
 
     public static UserRecipeResponse from(UserRecipe userRecipe){
+        Long storageId;
+        if(userRecipe.getStorage() == null){
+            storageId = null;
+        }
+        else{
+            storageId= userRecipe.getStorage().getId();
+        }
         return UserRecipeResponse.builder()
                 .userId(userRecipe.getUser().getId())
-                .storageId(userRecipe.getStorage().getId())
                 .recipeId(userRecipe.getRecipe().getId())
+                .storageId(storageId)
                 .build();
     }
 }

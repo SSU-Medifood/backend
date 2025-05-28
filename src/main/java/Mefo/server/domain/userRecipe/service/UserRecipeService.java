@@ -32,7 +32,7 @@ public class UserRecipeService {
 
     //특정 보관함에 레시피 찜하기
     @Transactional
-    public UserRecipe createUserRecipe(User user, Long storageId, Long recipeId){
+    public UserRecipe patchUserRecipe(User user, Long storageId, Long recipeId){
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(()-> new BusinessException(ErrorCode.RECIPE_DOESNT_EXIST));
         Storage storage = storageRepository.findByIdAndUserId(storageId, user.getId())
@@ -51,7 +51,9 @@ public class UserRecipeService {
     public void deleteUserRecipe(User user, Long recipeId){
         UserRecipe userRecipe = userRecipeRepository.findByUserIdAndRecipeId(user.getId(), recipeId)
                 .orElseThrow(()-> new BusinessException(ErrorCode.USER_RECIPE_DOESNT_EXIST));
-        userRecipe.getStorage().getUserRecipes().remove(userRecipe);
+        if(userRecipe.getStorage() != null){
+            userRecipe.getStorage().getUserRecipes().remove(userRecipe);
+        }
         userRecipeRepository.delete(userRecipe);
     }
 }

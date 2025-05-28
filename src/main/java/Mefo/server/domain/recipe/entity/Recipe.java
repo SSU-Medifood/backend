@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,7 +22,15 @@ public class Recipe extends BaseEntity {
     private String menu;
     private String calories;
     private Long amount;
-    private List<String> order;
+//    private List<String> cookingOrder = new ArrayList<>();
     @OneToOne(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private RecipeImage recipeImage;
+
+//    @PostLoad  // 또는 @PrePersist
+//    private void initCookingOrder() {
+//        if (this.cookingOrder == null || this.cookingOrder.isEmpty()) {
+//            this.cookingOrder.add("1.재료 썰기");
+//            this.cookingOrder.add("2.끓이기");
+//        }
+//    }
 }

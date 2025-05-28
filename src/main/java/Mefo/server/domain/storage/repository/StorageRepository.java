@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface StorageRepository extends JpaRepository<Storage, Long> {
     Optional<Storage> findById(Long id);
     List<Storage> findAllByUserId(Long id);
+    Optional<Storage> findByIdAndUserId(Long id, Long userId);
 }

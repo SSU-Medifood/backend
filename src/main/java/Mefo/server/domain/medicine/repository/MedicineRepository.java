@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
     List<Medicine> findAllByUserId(Long id);
-    Optional<Medicine> findById(Long id);
+    Optional<Medicine> findByIdAndUserId(Long id, Long userId);
 }

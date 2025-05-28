@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Entity
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class Recipe extends BaseEntity {
     private String menu;
     private String calories;
     private Long amount;
+    private List<String> order;
     @OneToOne(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private RecipeImage recipeImage;
 }

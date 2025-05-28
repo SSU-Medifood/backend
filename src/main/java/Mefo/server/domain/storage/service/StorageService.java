@@ -26,7 +26,8 @@ public class StorageService {
     //보관함 이름 수정
     @Transactional
     public Storage patchStorage(User user, Long storageId, StorageRequest storageRequest){
-        Storage storage = checkStorageUser(user, storageId);
+        Storage storage = storageRepository.findByIdAndUserId(storageId, user.getId())
+                .orElseThrow(()-> new BusinessException(ErrorCode.STORAGE_DOESNT_EXIST));
         storage.patchStorageName(storageRequest.getName());
         storageRepository.save(storage);
         return storage;
@@ -35,19 +36,10 @@ public class StorageService {
     //보관함 삭제하기
     @Transactional
     public void deleteStorage(User user, Long storageId){
-        Storage storage = checkStorageUser(user, storageId);
+        Storage storage = storageRepository.findByIdAndUserId(storageId, user.getId())
+                .orElseThrow(()-> new BusinessException(ErrorCode.STORAGE_DOESNT_EXIST));
         user.getStorages().remove(storage);
         storageRepository.delete(storage);
-    }
-
-    //해당 유저의 storage가 맞는지 확인
-    public Storage checkStorageUser(User user, Long storageId){
-        Storage storage = storageRepository.findById(storageId)
-                .orElseThrow(()-> new BusinessException(ErrorCode.STORAGE_DOESNT_EXIST));
-        if(!storage.getUser().getId().equals(user.getId())){
-            throw new BusinessException(ErrorCode.NOT_VALID_ACCESS);
-        }
-        return storage;
     }
 
 }

@@ -30,4 +30,14 @@ public class UserRecipe extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipeId")
     private Recipe recipe;
+
+    public UserRecipe(User user, Recipe recipe){
+        this.storage = null;
+        this.user = user;
+        this.recipe = recipe;
+    }
+
+    public void setStorage(Storage storage) {
+        this.storage = storage;
+    }
 }

@@ -9,7 +9,7 @@ import Mefo.server.domain.storage.repository.StorageRepository;
 import Mefo.server.domain.storage.service.StorageService;
 import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.service.UserService;
-import Mefo.server.domain.userRecipe.dto.UserRecipeResponse;
+import Mefo.server.domain.recipeImage.dto.RecipeImageResponse;
 import Mefo.server.domain.userRecipe.entity.UserRecipe;
 import Mefo.server.domain.userRecipe.repository.UserRecipeRepository;
 import Mefo.server.global.response.ApiResponse;
@@ -75,20 +75,20 @@ public class StorageController {
     //전체 보관함 레시피 호출
     @GetMapping("/getAll")
     @Operation(summary = "전체 보관함 레시피 불러오기")
-    public ApiResponse<List<UserRecipeResponse>> getAllUserRecipe(Authentication authentication){
+    public ApiResponse<List<RecipeImageResponse>> getAllUserRecipe(Authentication authentication){
         User user = userService.getLoginUser(authentication.getName());
         List<UserRecipe> userRecipes = userRecipeRepository.findAllByUserId(user.getId());
         LinkedList<RecipeImage> recipeImages = recipeImageService.getRecipeImage(userRecipes);
-        return new ApiResponse<>(200,UserRecipeResponse.from(userRecipes, recipeImages));
+        return new ApiResponse<>(200, RecipeImageResponse.from(userRecipes, recipeImages));
     }
 
     //보관함에 있는 레시피 호출
     @GetMapping("/get/{storageId}")
     @Operation(summary = "특정 보관함 레시피 불러오기")
-    public ApiResponse<List<UserRecipeResponse>> getUserRecipe(Authentication authentication, @PathVariable Long storageId){
+    public ApiResponse<List<RecipeImageResponse>> getUserRecipe(Authentication authentication, @PathVariable Long storageId){
         User user = userService.getLoginUser(authentication.getName());
-        List<UserRecipe> userRecipes = userRecipeRepository.findAllByStorageId(storageId);
+        List<UserRecipe> userRecipes = userRecipeRepository.findAllByUserIdAndStorageId(user.getId(), storageId);
         LinkedList<RecipeImage> recipeImages = recipeImageService.getRecipeImage(userRecipes);
-        return new ApiResponse<>(200,UserRecipeResponse.from(userRecipes, recipeImages));
+        return new ApiResponse<>(200, RecipeImageResponse.from(userRecipes, recipeImages));
     }
 }

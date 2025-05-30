@@ -77,9 +77,8 @@ jobs:
         script: |
           echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
           cd ~/.ssh/backend
-          git pull
           sudo docker compose down
+          git pull origin main
           sudo docker compose pull
-          sudo docker rm -f mefo-backend
           sudo docker compose up -d
           sudo docker image prune -a -f

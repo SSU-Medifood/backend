@@ -1,6 +1,8 @@
 package Mefo.server.domain.recipe.entity;
 
 import Mefo.server.domain.common.BaseEntity;
+import Mefo.server.domain.ingredient.entity.Ingredient;
+import Mefo.server.domain.instruction.entity.Instruction;
 import Mefo.server.domain.recipeImage.entity.RecipeImage;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,17 +22,23 @@ public class Recipe extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String menu;
-    private String calories;
-    private Long amount;
-//    private List<String> cookingOrder = new ArrayList<>();
+    @Column(length = 50)
+    private String foodType;
+    @Column(length = 50)
+    private String cookingType;
+    private int amount;
+    private int calories;
+    private int carbohydrate;
+    private int protein;
+    private int fat;
+    private int sodium;
     @OneToOne(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private RecipeImage recipeImage;
 
-//    @PostLoad  // 또는 @PrePersist
-//    private void initCookingOrder() {
-//        if (this.cookingOrder == null || this.cookingOrder.isEmpty()) {
-//            this.cookingOrder.add("1.재료 썰기");
-//            this.cookingOrder.add("2.끓이기");
-//        }
-//    }
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ingredient> ingredients;
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Instruction> instructions;
+
 }

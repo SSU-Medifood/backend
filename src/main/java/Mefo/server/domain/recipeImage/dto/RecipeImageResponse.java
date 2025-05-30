@@ -17,7 +17,7 @@ public class RecipeImageResponse {
     private Long recipeId;
     private String name;
     @Schema(example = "https://example.com/image.jpg")
-    private String image;
+    private String imageSmall;
 
     public static List<RecipeImageResponse> from(List<UserRecipe> userRecipes, LinkedList<RecipeImage> recipeImages){
         List<RecipeImageResponse> recipeImageResponses = new ArrayList<>();
@@ -27,7 +27,7 @@ public class RecipeImageResponse {
             RecipeImageResponse recipeImageResponse = RecipeImageResponse.builder()
                     .recipeId(recipeImage.getId())
                     .name(userRecipe.getRecipe().getMenu())
-                    .image(recipeImage.getImage())
+                    .imageSmall(recipeImage.getImageSmall())
                     .build();
             recipeImageResponses.add(recipeImageResponse);
         }

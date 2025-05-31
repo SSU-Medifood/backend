@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/userInfo")
 @RequiredArgsConstructor
-@Tag(name="UserInfo")
+@Tag(name="유저 건강 정보")
 public class UserInfoController {
     private final UserInfoService userInfoService;
     //유저 건강 정보 불러오기

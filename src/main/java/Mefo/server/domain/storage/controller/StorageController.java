@@ -26,7 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/storage")
 @RequiredArgsConstructor
-@Tag(name="Storage")
+@Tag(name="보관함")
 public class StorageController {
     private final UserService userService;
     private final StorageService storageService;

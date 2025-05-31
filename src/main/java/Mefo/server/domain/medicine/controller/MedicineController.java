@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/medicine")
 @RequiredArgsConstructor
-@Tag(name="Medicine")
+@Tag(name="약 관리")
 public class MedicineController {
     private final UserService userService;
     private final MedicineRepository medicineRepository;

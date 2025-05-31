@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/userRecipe")
 @RequiredArgsConstructor
-@Tag(name="UserRecipe")
+@Tag(name="찜 관리")
 public class UserRecipeController {
     private final UserService userService;
     private final UserRecipeService userRecipeService;

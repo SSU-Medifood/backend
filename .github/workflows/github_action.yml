@@ -46,13 +46,13 @@ jobs:
       run: mkdir -p ./src/main/resources/firebase
       shell: bash
 
-    - name: make mefo-firebase.json
-      if: contains(github.ref, 'main')
-      run: |
-        cd ./src/main/resources/firebase
-        touch ./mefo-firebase.json
-        echo "${{ secrets.MEFOFIREBASE_JSON }}" >> ./mefo-firebase.json
-      shell: bash
+    - name: create mefo-firebase.json
+      id: create-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "mefo-firebase.json"
+        json: ${{ secrets.MEFOFIREBASE_JSON }}
+        dir: 'src/main/resources/firebase/'
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0

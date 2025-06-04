@@ -42,8 +42,30 @@ jobs:
         echo "${{ secrets.APPLICATION_PROD }}" >> ./application-prod.yml
       shell: bash
 
+    - name: create firebase directory
+      run: mkdir -p ./src/main/resources/firebase
+      shell: bash
+
+    - name: make mefo-firebase.json
+      if: contains(github.ref, 'main')
+      run: |
+        cd ./src/main/resources/firebase
+        touch ./mefo-firebase.json
+        echo "${{ secrets.MEFOFIREBASE_JSON }}" >> ./mefo-firebase.json
+      shell: bash
+
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+    - name: Gradle caching
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew

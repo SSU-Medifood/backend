@@ -8,6 +8,7 @@ gradlew.bat
 
 ### YML ###
 src/main/resources/*.yml
+src/main/resources/firebase/
 
 ### SSL ###
 nginx/ssl/

@@ -5,7 +5,6 @@ import Mefo.server.domain.ingredient.entity.Ingredient;
 import Mefo.server.domain.instruction.dto.InstructionResponse;
 import Mefo.server.domain.instruction.entity.Instruction;
 import Mefo.server.domain.recipe.entity.Recipe;
-import Mefo.server.domain.recipeImage.entity.RecipeImage;
 import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;

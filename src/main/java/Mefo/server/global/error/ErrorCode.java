@@ -15,6 +15,7 @@ public enum ErrorCode {
 
     //TOKEN
     TOKEN_NOT_PROVIDED(401, "토큰이 없거나 형식이 잘못되었습니다."),
+    TOKEN_DOESNT_EXIST(404, "존재하지 않는 토큰입니다."),
 
     TOKEN_EXPIRED(401, "만료된 토큰입니다."),
 

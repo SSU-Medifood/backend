@@ -1,11 +1,14 @@
 package Mefo.server.domain.user.service;
 
+import Mefo.server.domain.alarm.entity.Alarm;
 import Mefo.server.domain.allergyDrug.entity.AllergyDrug;
 import Mefo.server.domain.allergyDrug.repository.AllergyDrugRepository;
 import Mefo.server.domain.allergyEtc.entity.AllergyEtc;
 import Mefo.server.domain.allergyEtc.repository.AllergyEtcRepository;
 import Mefo.server.domain.disease.entity.Disease;
 import Mefo.server.domain.disease.repository.DiseaseRepository;
+import Mefo.server.domain.medicine.entity.Medicine;
+import Mefo.server.domain.medicine.repository.MedicineRepository;
 import Mefo.server.domain.user.dto.*;
 import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.repository.UserRepository;
@@ -16,6 +19,7 @@ import Mefo.server.domain.userInfo.entity.UserInfo;
 import Mefo.server.domain.userInfo.repository.UserInfoRepository;
 import Mefo.server.global.error.ErrorCode;
 import Mefo.server.global.error.exception.BusinessException;
+import Mefo.server.global.scheduler.component.AlarmComponent;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +37,8 @@ public class UserService {
     private final AllergyDrugRepository allergyDrugRepository;
     private final AllergyEtcRepository allergyEtcRepository;
     private final DiseaseRepository diseaseRepository;
+    private final MedicineRepository medicineRepository;
+    private final AlarmComponent alarmComponent;
 
     //이메일 중복 확인하기
     public EmailCheckResponse checkEmailDuplicate(EmailCheckRequest emailCheckRequest){
@@ -50,8 +56,6 @@ public class UserService {
             userInfo.getUserAllergyEtcList().addAll(createUserAllergyEtcList(userInfo, joinRequest.getAllergyEtcs()));
             userInfo.getUserDiseaseList().addAll(createUserDiseaseList(userInfo, joinRequest.getDiseases()));
         }
-//        Storage storage = new Storage(user, "전체 보관함");
-//        user.getStorages().add(storage);
 
         userRepository.save(user);
         userInfoRepository.save(userInfo);
@@ -85,6 +89,12 @@ public class UserService {
         UserInfo userInfo = userInfoRepository.findByUserId(user.getId())
                         .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
         userInfoRepository.delete(userInfo);
+        List<Medicine> medicines = medicineRepository.findAllByUserId(user.getId());
+        for(Medicine medicine : medicines){
+            for(Alarm alarm : medicine.getAlarmTime()) {
+                alarmComponent.cancelMediAlarm(alarm.getId());
+            }
+        }
         userRepository.delete(user);
     }
 

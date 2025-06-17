@@ -25,7 +25,7 @@ public class AlarmComponent {
     public void scheduleMediAlarm(User user, Alarm alarm){
         Runnable task = () -> {
             try{
-                firebaseService.sendPushNotification(user, "약 복용 알림", alarm.getMedicine().getMediNickName()+" 드실 시간이에요!");
+                firebaseService.sendPushNotification(user, "약 복용 알림", alarm.getAlarmTime()+"\n"+alarm.getMedicine().getMediNickName()+" 드실 시간이에요!");
             } catch (Exception e){
                 e.printStackTrace();
             }

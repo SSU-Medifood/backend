@@ -38,7 +38,6 @@ public class FirebaseService {
                 .build();
 
         String response = FirebaseMessaging.getInstance().send(message);
-        System.out.println("push success : " + response);
     }
 
     //토큰 저장 또는 업데이트 하기

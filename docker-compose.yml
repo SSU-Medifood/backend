@@ -2,6 +2,8 @@ services:
   backend:
     container_name: mefo-backend
     image: ssumefo/mefo:latest
+    environment:
+      - TZ=Asia/Seoul
     expose:
       - "8080"
     networks:
@@ -10,6 +12,8 @@ services:
   nginx:
     image: nginx:latest
     container_name: mefo-nginx
+    environment:
+      - TZ=Asia/Seoul
     ports:
       - "80:80"
       - "443:443"
@@ -25,6 +29,8 @@ services:
   certbot:
     image: certbot/certbot:latest
     container_name: certbot
+    environment:
+      - TZ=Asia/Seoul
     volumes:
       - ./nginx/ssl:/etc/letsencrypt
     entrypoint: >

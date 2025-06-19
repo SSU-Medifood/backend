@@ -17,8 +17,12 @@ import Mefo.server.domain.userAllergyEtc.entity.UserAllergyEtc;
 import Mefo.server.domain.userDisease.entity.UserDisease;
 import Mefo.server.domain.userInfo.entity.UserInfo;
 import Mefo.server.domain.userInfo.repository.UserInfoRepository;
+import Mefo.server.domain.userRecipe.entity.UserRecipe;
+import Mefo.server.domain.userRecipe.repository.UserRecipeRepository;
 import Mefo.server.global.error.ErrorCode;
 import Mefo.server.global.error.exception.BusinessException;
+import Mefo.server.global.firebase.entity.FirebaseToken;
+import Mefo.server.global.firebase.repository.FirebaseRepository;
 import Mefo.server.global.scheduler.component.AlarmComponent;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -39,6 +44,8 @@ public class UserService {
     private final DiseaseRepository diseaseRepository;
     private final MedicineRepository medicineRepository;
     private final AlarmComponent alarmComponent;
+    private final FirebaseRepository firebaseRepository;
+    private final UserRecipeRepository userRecipeRepository;
 
     //이메일 중복 확인하기
     public EmailCheckResponse checkEmailDuplicate(EmailCheckRequest emailCheckRequest){
@@ -89,12 +96,19 @@ public class UserService {
         UserInfo userInfo = userInfoRepository.findByUserId(user.getId())
                         .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
         userInfoRepository.delete(userInfo);
+        Optional<FirebaseToken> firebaseToken = firebaseRepository.findByUserId(user.getId());
+        if(firebaseToken.isPresent()){
+            FirebaseToken token = firebaseToken.get();
+            firebaseRepository.delete(token);
+        }
         List<Medicine> medicines = medicineRepository.findAllByUserId(user.getId());
         for(Medicine medicine : medicines){
             for(Alarm alarm : medicine.getAlarmTime()) {
                 alarmComponent.cancelMediAlarm(alarm.getId());
             }
         }
+        List<UserRecipe> userRecipes = userRecipeRepository.findAllByUserId(user.getId());
+        userRecipeRepository.deleteAll(userRecipes);
         userRepository.delete(user);
     }
 

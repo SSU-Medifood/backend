@@ -37,7 +37,7 @@ public class UserController {
     }
 
     //사용자 설정 불러오기
-    @GetMapping("/user/get")
+    @PostMapping("/user/get")
     @Operation(summary = "사용자 설정 불러오기")
     public ApiResponse<SettingResponse> getUserSetting(Authentication authentication, @RequestBody DeviceRequest deviceRequest){
         User user = userService.getLoginUser(authentication.getName());

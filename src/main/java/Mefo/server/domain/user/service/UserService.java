@@ -21,8 +21,10 @@ import Mefo.server.domain.userRecipe.entity.UserRecipe;
 import Mefo.server.domain.userRecipe.repository.UserRecipeRepository;
 import Mefo.server.global.error.ErrorCode;
 import Mefo.server.global.error.exception.BusinessException;
+import Mefo.server.global.firebase.dto.TokenRequest;
 import Mefo.server.global.firebase.entity.FirebaseToken;
 import Mefo.server.global.firebase.repository.FirebaseRepository;
+import Mefo.server.global.firebase.service.FirebaseService;
 import Mefo.server.global.scheduler.component.AlarmComponent;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,6 +47,7 @@ public class UserService {
     private final MedicineRepository medicineRepository;
     private final AlarmComponent alarmComponent;
     private final FirebaseRepository firebaseRepository;
+    private final FirebaseService firebaseService;
     private final UserRecipeRepository userRecipeRepository;
 
     //이메일 중복 확인하기
@@ -79,12 +82,43 @@ public class UserService {
         userRepository.save(user);
     }
 
-    //유저 설정 변경
+    //사용자 설정 불러오기
+    public boolean getPushAlarm(User user, DeviceRequest deviceRequest){
+        Optional<FirebaseToken> firebaseToken = firebaseRepository.findByUserIdAndDevice(user.getId(), deviceRequest.getDevice());
+        boolean pushAlarm;
+        if(firebaseToken.isPresent()){
+            pushAlarm = true;
+        }
+        else{
+            pushAlarm = false;
+        }
+        return pushAlarm;
+    }
+
+
+    //현재 접속한 기기의 푸시 알림 설정 변경
     @Transactional
-    public User patchUser(String email, UserRequest userRequest){
+    public boolean patchPushAlarm(String email, DeviceRequest deviceRequest, TokenRequest tokenRequest){
         User user = getLoginUser(email);
-        user.setPushAlarm(userRequest.isPushAlarm());
-        user.setMarketing(userRequest.isMarketing());
+        Optional<FirebaseToken> firebaseToken = firebaseRepository.findByUserIdAndDevice(user.getId(), deviceRequest.getDevice());
+        boolean pushAlarm;
+        if(firebaseToken.isPresent()){
+            firebaseRepository.delete(firebaseToken.get());
+            pushAlarm = false;
+        }
+        else{
+            FirebaseToken token = new FirebaseToken(user, deviceRequest.getDevice(), tokenRequest.getFcmtoken());
+            firebaseRepository.save(token);
+            pushAlarm = true;
+        }
+        return pushAlarm;
+    }
+
+    //유저 마케팅 수신 설정 변경
+    @Transactional
+    public User patchMarketing(String email, MarketingRequest marketingRequest){
+        User user = getLoginUser(email);
+        user.setMarketing(marketingRequest.isMarketing());
         userRepository.save(user);
         return user;
     }
@@ -96,11 +130,9 @@ public class UserService {
         UserInfo userInfo = userInfoRepository.findByUserId(user.getId())
                         .orElseThrow(()-> new BusinessException(ErrorCode.USER_DOESNT_EXIST));
         userInfoRepository.delete(userInfo);
-        Optional<FirebaseToken> firebaseToken = firebaseRepository.findByUserId(user.getId());
-        if(firebaseToken.isPresent()){
-            FirebaseToken token = firebaseToken.get();
-            firebaseRepository.delete(token);
-        }
+        List<FirebaseToken> firebaseTokens = firebaseRepository.findAllByUserId(user.getId());
+        firebaseRepository.deleteAll(firebaseTokens);
+
         List<Medicine> medicines = medicineRepository.findAllByUserId(user.getId());
         for(Medicine medicine : medicines){
             for(Alarm alarm : medicine.getAlarmTime()) {

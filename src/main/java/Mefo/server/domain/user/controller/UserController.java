@@ -3,6 +3,7 @@ package Mefo.server.domain.user.controller;
 import Mefo.server.domain.user.dto.*;
 import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.service.UserService;
+import Mefo.server.global.firebase.dto.TokenRequest;
 import Mefo.server.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,18 +39,28 @@ public class UserController {
     //사용자 설정 불러오기
     @GetMapping("/user/get")
     @Operation(summary = "사용자 설정 불러오기")
-    public ApiResponse<UserResponse> getUser(Authentication authentication){
+    public ApiResponse<SettingResponse> getUserSetting(Authentication authentication, @RequestBody DeviceRequest deviceRequest){
         User user = userService.getLoginUser(authentication.getName());
-        return new ApiResponse<>(200, UserResponse.from(user));
+        boolean pushAlarm = userService.getPushAlarm(user, deviceRequest);
+        return new ApiResponse<>(200, SettingResponse.from(user, pushAlarm));
     }
 
-    //사용자 설정 수정하기
+    //현재 접속한 기기 푸시 알림 변경
     @Transactional
-    @PatchMapping("/user/patch")
-    @Operation(summary = "사용자 설정 수정하기")
-    public ApiResponse<UserResponse> patchUser(Authentication authentication, @RequestBody UserRequest userRequest){
-        User user = userService.patchUser(authentication.getName(), userRequest);
-        return new ApiResponse<>(200, UserResponse.from(user));
+    @PatchMapping("/user/patchPushAlarm")
+    @Operation(summary = "현재 접속 기기의 푸시 알림 수정하기")
+    public ApiResponse<DeviceResponse> patchPushAlarm(Authentication authentication, @RequestBody DeviceRequest deviceRequest, @RequestBody TokenRequest tokenRequest){
+        boolean pushAlarm = userService.patchPushAlarm(authentication.getName(), deviceRequest, tokenRequest);
+        return new ApiResponse<>(200, DeviceResponse.from(deviceRequest, pushAlarm));
+    }
+
+    //사용자 마케팅 설정 수정하기
+    @Transactional
+    @PatchMapping("/user/patchMarketing")
+    @Operation(summary = "마케팅 설정 수정하기")
+    public ApiResponse<MarketingResponse> patchUserMarketing(Authentication authentication, @RequestBody MarketingRequest marketingRequest){
+        User user = userService.patchMarketing(authentication.getName(), marketingRequest);
+        return new ApiResponse<>(200, MarketingResponse.from(user));
     }
 
     //회원탈퇴

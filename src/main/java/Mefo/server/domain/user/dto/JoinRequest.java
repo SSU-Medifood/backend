@@ -37,7 +37,6 @@ public class JoinRequest {
                 .email(email)
                 .password(password)
                 .userRole(UserRole.USER)
-                .pushAlarm(true)
                 .marketing(marketing)
                 .storages(new ArrayList<>())
                 .userState(UserState.ACTIVE)

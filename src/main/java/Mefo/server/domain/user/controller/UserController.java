@@ -49,9 +49,9 @@ public class UserController {
     @Transactional
     @PatchMapping("/user/patchPushAlarm")
     @Operation(summary = "현재 접속 기기의 푸시 알림 수정하기")
-    public ApiResponse<DeviceResponse> patchPushAlarm(Authentication authentication, @RequestBody DeviceRequest deviceRequest, @RequestBody TokenRequest tokenRequest){
-        boolean pushAlarm = userService.patchPushAlarm(authentication.getName(), deviceRequest, tokenRequest);
-        return new ApiResponse<>(200, DeviceResponse.from(deviceRequest, pushAlarm));
+    public ApiResponse<DeviceResponse> patchPushAlarm(Authentication authentication, @RequestBody PushAlarmRequest pushAlarmRequest){
+        boolean pushAlarm = userService.patchPushAlarm(authentication.getName(), pushAlarmRequest);
+        return new ApiResponse<>(200, DeviceResponse.from(pushAlarmRequest.getDevice(), pushAlarm));
     }
 
     //사용자 마케팅 설정 수정하기

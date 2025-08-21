@@ -98,16 +98,16 @@ public class UserService {
 
     //현재 접속한 기기의 푸시 알림 설정 변경
     @Transactional
-    public boolean patchPushAlarm(String email, DeviceRequest deviceRequest, TokenRequest tokenRequest){
+    public boolean patchPushAlarm(String email, PushAlarmRequest pushAlarmRequest){
         User user = getLoginUser(email);
-        Optional<FirebaseToken> firebaseToken = firebaseRepository.findByUserIdAndDevice(user.getId(), deviceRequest.getDevice());
+        Optional<FirebaseToken> firebaseToken = firebaseRepository.findByUserIdAndDevice(user.getId(), pushAlarmRequest.getDevice());
         boolean pushAlarm;
         if(firebaseToken.isPresent()){
             firebaseRepository.delete(firebaseToken.get());
             pushAlarm = false;
         }
         else{
-            FirebaseToken token = new FirebaseToken(user, deviceRequest.getDevice(), tokenRequest.getFcmtoken());
+            FirebaseToken token = new FirebaseToken(user, pushAlarmRequest.getDevice(), pushAlarmRequest.getFcmToken());
             firebaseRepository.save(token);
             pushAlarm = true;
         }

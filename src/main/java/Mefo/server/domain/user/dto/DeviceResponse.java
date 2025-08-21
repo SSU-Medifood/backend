@@ -9,9 +9,9 @@ public class DeviceResponse {
     private String device;
 
     private boolean pushAlarm;
-    public static DeviceResponse from(DeviceRequest deviceRequest, boolean pushAlarm){
+    public static DeviceResponse from(String device, boolean pushAlarm){
         return DeviceResponse.builder()
-                .device(deviceRequest.getDevice())
+                .device(device)
                 .pushAlarm(pushAlarm)
                 .build();
     }

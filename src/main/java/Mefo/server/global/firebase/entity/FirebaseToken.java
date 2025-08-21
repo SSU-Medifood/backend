@@ -21,12 +21,16 @@ public class FirebaseToken extends BaseEntity {
     @JoinColumn(name = "userId")
     private User user;
 
+    private String device;
+
     private String fcmToken;
 
-    public FirebaseToken(User user, String fcmToken){
+    public FirebaseToken(User user, String device, String fcmToken){
         this.user = user;
+        this.device = device;
         this.fcmToken = fcmToken;
     }
+
     public void setFcmToken(String fcmToken){
         this.fcmToken = fcmToken;
     }

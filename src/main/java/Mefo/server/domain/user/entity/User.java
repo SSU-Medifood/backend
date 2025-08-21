@@ -33,9 +33,6 @@ public class User extends BaseEntity {
     private UserState userState;
 
     @NotNull
-    private boolean pushAlarm;
-
-    @NotNull
     private boolean marketing;
 
     @NotNull
@@ -52,7 +49,5 @@ public class User extends BaseEntity {
     public void setPassword(String password){this.password = password;}
     public void setUserState(UserState userState){this.userState = userState;}
     public void setMarketing(boolean agree){this.marketing = agree;}
-
-    public void setPushAlarm(boolean agree){this.pushAlarm = agree;}
     public void setUserRole(UserRole userRole){this.userRole = userRole;}
 }

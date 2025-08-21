@@ -1,5 +1,6 @@
 package Mefo.server.global.firebase.controller;
 
+import Mefo.server.domain.user.dto.DeviceRequest;
 import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.service.UserService;
 import Mefo.server.global.firebase.dto.TokenRequest;
@@ -23,22 +24,22 @@ public class FirebaseController {
     private final FirebaseService firebaseService;
     private final UserService userService;
 
-    //token 저장하기
-    @Transactional
-    @PostMapping("/save")
-    @Operation(summary = "토큰 저장 또는 교체 요청하기")
-    public ApiResponse<TokenResponse> saveOrUpdateToken(Authentication authentication, @RequestBody TokenRequest tokenRequest){
-        User user = userService.getLoginUser(authentication.getName());
-        FirebaseToken fcmToken = firebaseService.saveOrUpdateToken(user, tokenRequest.getFcmtoken());
-        return new ApiResponse<>(201, TokenResponse.from(user.getEmail(), fcmToken.getFcmToken()));
-    }
+//    //token 저장하기
+//    @Transactional
+//    @PostMapping("/save")
+//    @Operation(summary = "토큰 저장 또는 교체 요청하기")
+//    public ApiResponse<TokenResponse> saveOrUpdateToken(Authentication authentication, @RequestBody DeviceRequest deviceRequest, @RequestBody TokenRequest tokenRequest){
+//        User user = userService.getLoginUser(authentication.getName());
+//        FirebaseToken fcmToken = firebaseService.saveOrUpdateToken(user, deviceRequest.getDevice(), tokenRequest.getFcmtoken());
+//        return new ApiResponse<>(201, TokenResponse.from(user.getEmail(), deviceRequest.getDevice(), fcmToken.getFcmToken()));
+//    }
 
     @Transactional
     @DeleteMapping("/delete")
     @Operation(summary = "토큰 삭제 요청하기")
-    public ApiResponse<String> deleteToken(Authentication authentication){
+    public ApiResponse<String> deleteToken(Authentication authentication, @RequestBody DeviceRequest deviceRequest){
         User user = userService.getLoginUser(authentication.getName());
-        firebaseService.deleteToken(user);
+        firebaseService.deleteToken(user, deviceRequest.getDevice());
         return new ApiResponse<>(204, null);
     }
 

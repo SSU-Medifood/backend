@@ -4,15 +4,13 @@ import Mefo.server.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
-public class UserResponse {
-    private boolean pushAlarm;
+@Builder
+public class MarketingResponse {
     private boolean marketing;
 
-    public static UserResponse from(User user){
-        return UserResponse.builder()
-                .pushAlarm(user.isPushAlarm())
+    public static MarketingResponse from(User user){
+        return MarketingResponse.builder()
                 .marketing(user.isMarketing())
                 .build();
     }

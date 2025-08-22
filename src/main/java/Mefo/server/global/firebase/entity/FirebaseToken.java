@@ -12,17 +12,24 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        name = "firebase_token",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "device"})
+        }
+)
 public class FirebaseToken extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
     private String device;
 
+    @Column(name = "fcm_token", unique = true)
     private String fcmToken;
 
     public FirebaseToken(User user, String device, String fcmToken){

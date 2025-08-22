@@ -58,13 +58,21 @@ public class FirebaseService {
 //        return token;
 //    }
 
+    //특정 기기 토큰 삭제하기
     @Transactional
     public void deleteToken(User user, String device){
-        Optional<FirebaseToken> fcmtoken = firebaseRepository.findByUserIdAndDevice(user.getId(), device);
+        Optional<FirebaseToken> fcmToken = firebaseRepository.findByUserIdAndDevice(user.getId(), device);
         FirebaseToken token;
-        if (fcmtoken.isPresent()){
-            token = fcmtoken.get();
+        if (fcmToken.isPresent()){
+            token = fcmToken.get();
             firebaseRepository.delete(token);
         }
+    }
+
+    //모든 토큰 삭제하기
+    @Transactional
+    public void deleteAllToken(User user){
+        List<FirebaseToken> fcmTokens = firebaseRepository.findAllByUserId(user.getId());
+        firebaseRepository.deleteAll(fcmTokens);
     }
 }

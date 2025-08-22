@@ -36,10 +36,19 @@ public class FirebaseController {
 
     @Transactional
     @DeleteMapping("/delete")
-    @Operation(summary = "토큰 삭제 요청하기")
+    @Operation(summary = "특정 기기 토큰 삭제 요청하기")
     public ApiResponse<String> deleteToken(Authentication authentication, @RequestBody DeviceRequest deviceRequest){
         User user = userService.getLoginUser(authentication.getName());
         firebaseService.deleteToken(user, deviceRequest.getDevice());
+        return new ApiResponse<>(204, null);
+    }
+
+    @Transactional
+    @DeleteMapping("/deleteAll")
+    @Operation(summary = "모든 토큰 삭제 요청하기")
+    public ApiResponse<String> deleteAllToken(Authentication authentication){
+        User user = userService.getLoginUser(authentication.getName());
+        firebaseService.deleteAllToken(user);
         return new ApiResponse<>(204, null);
     }
 

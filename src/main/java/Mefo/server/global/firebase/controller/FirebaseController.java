@@ -4,6 +4,7 @@ import Mefo.server.domain.user.dto.DeviceRequest;
 import Mefo.server.domain.user.entity.User;
 import Mefo.server.domain.user.service.UserService;
 import Mefo.server.global.firebase.dto.TokenRequest;
+import Mefo.server.global.firebase.dto.UUIDResponse;
 import Mefo.server.global.firebase.entity.FirebaseToken;
 import Mefo.server.global.firebase.service.FirebaseService;
 import Mefo.server.global.login.dto.TokenResponse;
@@ -16,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/token")
 @RequiredArgsConstructor
@@ -23,6 +26,13 @@ import org.springframework.web.bind.annotation.*;
 public class FirebaseController {
     private final FirebaseService firebaseService;
     private final UserService userService;
+
+    @GetMapping("/getUUID")
+    @Operation(summary = "랜덤 UUID 생성하기")
+    public ApiResponse<UUIDResponse> createUUID(){
+        String uuid = UUID.randomUUID().toString();
+        return new ApiResponse<>(200, UUIDResponse.from(uuid));
+    }
 
 //    //token 저장하기
 //    @Transactional

@@ -102,14 +102,17 @@ public class UserService {
         User user = getLoginUser(email);
         Optional<FirebaseToken> firebaseToken = firebaseRepository.findByUserIdAndDevice(user.getId(), pushAlarmRequest.getDevice());
         boolean pushAlarm;
-        if(firebaseToken.isPresent()){
+        if(firebaseToken.isPresent()&&pushAlarmRequest.getFcmToken()==null){
             firebaseRepository.delete(firebaseToken.get());
             pushAlarm = false;
         }
-        else{
+        else if(firebaseToken.isEmpty()&&pushAlarmRequest.getFcmToken()!=null){
             FirebaseToken token = new FirebaseToken(user, pushAlarmRequest.getDevice(), pushAlarmRequest.getFcmToken());
             firebaseRepository.save(token);
             pushAlarm = true;
+        }
+        else{
+            throw new BusinessException(ErrorCode.TOKEN_NOT_PROVIDED);
         }
         return pushAlarm;
     }

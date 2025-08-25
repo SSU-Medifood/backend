@@ -28,7 +28,6 @@ services:
 
   certbot:
     image: certbot/certbot:latest
-    container_name: certbot
     environment:
       - TZ=Asia/Seoul
     volumes:
